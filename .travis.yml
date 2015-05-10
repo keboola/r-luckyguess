@@ -1,0 +1,18 @@
+language: r
+
+sudo: required
+
+# Be strict when checking our package
+warnings_are_errors: true
+
+apt_packages:
+ - r-cran-rjava
+
+r_github_packages:
+ - keboola/redshift-r-client
+ - keboola/provisioning-r-client
+ - keboola/r-application
+ - keboola/r-docker-application
+
+notifications:
+  slack: keboola:8EW7Y0Kqvxxames1Rfp6feaE

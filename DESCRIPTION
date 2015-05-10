@@ -1,0 +1,16 @@
+Package: keboola.r.luckyguess
+Type: Package
+Title: R application which is used as backend for LuckyGuess application
+Version: 1.0
+Date: 2015-05-04
+Author: Ondrej Popelka
+Maintainer: Ondrej Popelka <ondrej.popelka@keboola.com>
+Depends:
+	methods,
+	keboola.r.docker.application,
+	keboola.redshift.r.client,
+	keboola.provisioning.r.client
+Suggests:
+	testthat
+Description: Application proessed the supplied R script with parameters.
+License: MIT + file LICENSE
