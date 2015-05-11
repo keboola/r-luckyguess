@@ -15,8 +15,8 @@
       }
     },
     "script": [
-        "Module <- setRefClass(",
-        "    'Module',",
+        "LGModule <- setRefClass(",
+        "    'LGModule',",
         "    contains = c('Application'),",
         "    fields = list(",
         "    ),",
@@ -52,7 +52,7 @@
         "",
         "       #' Declare parameters required by the module",
         "       #' @exportMethod",
-        "       parameters = function() {",
+        "       getParameters = function() {",
         "         # list is in form 'parameterName' = 'dataType'",
         "         # - 'dataType can be one of 'character', 'integer', 'double', 'lg_column' ",
         "         # - nested parameters are defined with dot notation",

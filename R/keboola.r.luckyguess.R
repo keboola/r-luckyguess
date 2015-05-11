@@ -173,10 +173,7 @@ LGApplication <- setRefClass(
         #' @return Command return value.
         silence = function(command) {
             if (!debugMode) {
-                con <- textConnection("dummy", open = "w", local = TRUE)
-                sink(con, type = c("output", "message"))                
                 msg.trap <- capture.output(suppressPackageStartupMessages(suppressMessages(suppressWarnings(ret <- command))))
-                sink(NULL, type = c("output", "message"))
             } else {
                 ret <- command
             }
@@ -188,6 +185,8 @@ LGApplication <- setRefClass(
         #' 
         #' @param character vector of package names to install
         installModulePackages = function(packages = c()) {
+            con <- textConnection("installMessages", open = "w", local = TRUE)
+            sink(con, type = c("output", "message"))                
             if (!is.null(packages) && (length(packages) > 0)) {
                 # repository <- "http://cran.us.r-project.org"
                 # use the czech mirror to increase speed slightly
@@ -212,6 +211,8 @@ LGApplication <- setRefClass(
                     silence(library(package, character.only = TRUE, quietly = TRUE))
                 })
             }
+            sink(NULL, type = c("output", "message"))
+            logDebug(installMessages)
         },
         
         
@@ -335,7 +336,7 @@ LGApplication <- setRefClass(
                 # load the module
                 source(scriptFile)
                 module = LGModule$new()
-                requiredParams <- module$parameters()
+                requiredParams <- module$getParameters()
                 
                 logDebug("Module packages")
                 logDebug(requiredParams$packages)
