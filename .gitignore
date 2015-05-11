@@ -4,3 +4,7 @@
 /tests/config.R
 /tests/data/out/files/exampleGraph.png
 /tests/data/out/files/exampleGraph.png.manifest
+/tests/data/1/out/files/exampleGraph.png
+/tests/data/1/out/files/exampleGraph.png.manifest
+/tests/data/2/out/files/exampleGraph.png
+/tests/data/2/out/files/exampleGraph.png.manifest

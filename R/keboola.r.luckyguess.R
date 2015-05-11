@@ -257,7 +257,11 @@ LGApplication <- setRefClass(
             } else {
                 scriptContent <<- scr
             }
-            fileTags <<- c('LuckyGuess', configData$parameters$fileTags);
+            if (!empty(configData$parameters$fileTags)) {
+                fileTags <<- c('LuckyGuess', configData$parameters$fileTags);
+            } else {
+                fileTags <<- c('LuckyGuess')
+            }
             
             # debug print parameters
             logDebug(paste0("Using data directory: ", dataDir))
