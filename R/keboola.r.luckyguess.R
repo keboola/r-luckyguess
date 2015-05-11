@@ -173,7 +173,10 @@ LGApplication <- setRefClass(
         #' @return Command return value.
         silence = function(command) {
             if (!debugMode) {
+                con <- textConnection("dummy", open = "w", local = TRUE)
+                sink(con, type = c("output", "message"))                
                 msg.trap <- capture.output(suppressPackageStartupMessages(suppressMessages(suppressWarnings(ret <- command))))
+                sink(NULL, type = c("output", "message"))
             } else {
                 ret <- command
             }
@@ -331,7 +334,7 @@ LGApplication <- setRefClass(
             wrapTryCatch({
                 # load the module
                 source(scriptFile)
-                module = Module$new()
+                module = LGModule$new()
                 requiredParams <- module$parameters()
                 
                 logDebug("Module packages")
