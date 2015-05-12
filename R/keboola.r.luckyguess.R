@@ -352,12 +352,13 @@ LGApplication <- setRefClass(
                     name <- unlist(strsplit(key, ".", fixed = TRUE))
                     tryCatch({
                         tmpData <- checkParam(paramsJ, name, requiredParams[[key]], key)
-                        scriptParameters <- tmpData[["data"]]
+                        paramsJ <- tmpData[["data"]]
                         checkErrors <<- c(checkErrors, tmpData[["warnings"]])
                     }, error = function(e) {
                         checkErrors <<- c(checkErrors, e$message)
                     })
                 }
+                scriptParameters <<- paramsJ
                 checkErrors <<- checkErrors[!is.na(checkErrors)]
                 if (length(checkErrors) > 0) {
                     stop(paste0("Some required parameters for module ", moduleToExecute, " were not provided: ", paste(errors, collapse = " ")))

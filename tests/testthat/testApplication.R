@@ -16,6 +16,17 @@ test_that("validate no tags", {
     expect_equal(1, length(app$fileTags))
 })
 
+test_that("column conversions", {
+    Sys.setenv('KBC_TOKEN' = KBC_TOKEN)
+    Sys.setenv('KBC_RUNID' = KBC_RUNID)
+    app <- LGApplication$new(file.path(DATA_DIR, '2'))
+    app$readConfig()
+    app$validate()
+    app$run()
+    expect_equal('test-column', app$scriptParameters$paramNested$columnName)
+})
+
+
 test_that("run without runid", {
     Sys.setenv('KBC_TOKEN' = KBC_TOKEN)
     app <- LGApplication$new(file.path(DATA_DIR, '1'))
