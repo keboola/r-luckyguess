@@ -172,11 +172,11 @@ LGApplication <- setRefClass(
         #' Note: this function does nothing if the debugMode variable is set to TRUE.
         #' @return Command return value.
         silence = function(command) {
-            if (!debugMode) {
+            #if (!debugMode) {
                 msg.trap <- capture.output(suppressPackageStartupMessages(suppressMessages(suppressWarnings(ret <- command))))
-            } else {
-                ret <- command
-            }
+            #} else {
+            #    ret <- command
+            #}
             ret
         },
         
@@ -336,6 +336,7 @@ LGApplication <- setRefClass(
                 # load the module
                 source(scriptFile)
                 module = LGModule$new()
+                module$setDebugMode(debugMode)
                 requiredParams <- module$getParameters()
                 
                 logDebug("Module packages")
