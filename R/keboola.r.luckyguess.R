@@ -352,7 +352,7 @@ LGApplication <- setRefClass(
                     name <- unlist(strsplit(key, ".", fixed = TRUE))
                     tryCatch({
                         tmpData <- checkParam(paramsJ, name, requiredParams[[key]], key)
-                        paramsJ <- tmpData[["data"]]
+                        scriptParameters <- tmpData[["data"]]
                         checkErrors <<- c(checkErrors, tmpData[["warnings"]])
                     }, error = function(e) {
                         checkErrors <<- c(checkErrors, e$message)
