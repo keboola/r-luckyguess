@@ -282,10 +282,10 @@ LGApplication <- setRefClass(
             
             # debug print parameters
             logDebug(paste0("Using data directory: ", dataDir))
-            logDebug(paste0("Token set to: ", token))
+            #logDebug(paste0("Token set to: ", token))
             logDebug(paste0("RunId set to: ", runId))
             logDebug(paste0("Source table set to: ", sourceTable))
-            logDebug(paste0("Script set to: ", scriptContent))
+            #logDebug(paste0("Script set to: ", scriptContent))
             logDebug("Script parameters set to: ")
             logDebug(scriptParameters)
             
