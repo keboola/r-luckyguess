@@ -70,11 +70,11 @@ LGApplication <- setRefClass(
         
         #' Save reference to a file.
         #'
-        #' @param key String file name.
-        #' @param value String physical file path.
+        #' @param name String physical file path.
+        #' @param tags Character vector of file tags.
         #' @exportMethod
-        saveFileName = function(name, value) {
-           newRow <- data.frame(name, value, stringsAsFactors = FALSE)
+        saveFileName = function(name, tags) {
+           newRow <- data.frame(name, tags, stringsAsFactors = FALSE)
            fileNames <<- rbind(fileNames, newRow)
         },
         
@@ -219,20 +219,31 @@ LGApplication <- setRefClass(
         #' Save uploaded files (move them to out directory and create manifests)
         saveFiles = function() {
             logDebug("Saving files")
-            files <- db$select(paste0("SELECT name, value FROM \"", db$schema, "\".\"r__file_names\";"))
-            for (i in 1:nrow(files)) {
-                logDebug(paste0("I'm creating manifest for file: ", files[i,]$value))
-                    
-                destination <- file.path(dataDir, 'out/files', files[i,]$value)
-                # intentionally use copy, because file.rename may use hardlinks which are not supported across partititons (in docker)
-                file.copy(
-                    from = file.path(workingDir, files[i,]$value),
-                    to = destination
-                )
-                writeFileManifest(
-                    fileName = destination, fileTags = fileTags, isPublic = FALSE, isPermanent = TRUE, notify = FALSE
-                )
-            }
+            files <- db$select(paste0("SELECT name, tags FROM \"", db$schema, "\".\"r__file_names\";"))
+            fileList <- split(files, files$name)
+            if (length(fileList) > 0) {
+                for (i in 1:length(fileList)) {
+                    tags <- fileList[[i]][, 'tags']
+                    tags <- c(fileTags, tags)
+                    # name is same for each row, we pick the first one
+                    fileName <- fileList[[i]][1, 'name']
+                    logDebug(paste0("I'm creating manifest for file: ", fileName))
+                            
+                    destination <- file.path(dataDir, 'out/files', fileName)
+                    # intentionally use copy, because file.rename may use hardlinks which are not supported across partititons (in docker)
+                    file.copy(
+                        from = file.path(workingDir, fileName),
+                        to = destination
+                    )
+                    if (file.exists(destination)) {
+                        writeFileManifest(
+                            fileName = destination, fileTags = tags, isPublic = FALSE, isPermanent = TRUE, notify = FALSE
+                        )
+                    } else {
+                        logError(paste0("Failed to write file ", fileName, ", manifest not created."));
+                    }
+                }
+            } # else no files
         },
 
         
@@ -261,6 +272,8 @@ LGApplication <- setRefClass(
             } else {
                 scriptContent <<- scr
             }
+            # It is important to add the LuckyGuess tag to all output files, because 
+            # it is used later in searching for the right file uploads.
             if (!empty(configData$parameters$fileTags)) {
                 fileTags <<- c('LuckyGuess', configData$parameters$fileTags);
             } else {
@@ -320,7 +333,7 @@ LGApplication <- setRefClass(
                 db$update(paste("DROP TABLE ", tableNamesTable, ";", sep = ""))
             }            
             db$update(paste0("CREATE TABLE ", keyValTable, " (name VARCHAR(200), value VARCHAR(200), grouping VARCHAR(200), PRIMARY KEY (name));"))
-            db$update(paste0("CREATE TABLE ", fileNamesTable, " (name VARCHAR(200), value VARCHAR(200), id INTEGER, PRIMARY KEY (name));"))
+            db$update(paste0("CREATE TABLE ", fileNamesTable, " (name VARCHAR(200), tags VARCHAR(200));"))
             db$update(paste0("CREATE TABLE ", tableNamesTable, " (name VARCHAR(200));"))        
         },
         

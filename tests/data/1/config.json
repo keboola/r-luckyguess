@@ -46,7 +46,7 @@
         "           # write to file",
         "           dev.off()",
         "",
-        "           app$saveFileName('ExampleModule', fileName)",
+        "           app$saveFileName(fileName, c('ExampleModule'))",
         "           TRUE",
         "       },",
         "",

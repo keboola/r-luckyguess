@@ -46,3 +46,47 @@ test_that("run", {
     expect_true(file.exists(file.path(DATA_DIR, '1/out/files', 'exampleGraph.png.manifest')))
 })
 
+
+test_that("file manifests", {
+    Sys.setenv('KBC_TOKEN' = KBC_TOKEN)
+    app <- LGApplication$new(file.path(DATA_DIR, '1'))
+    app$readConfig()    
+    app$startUp()
+
+    dataFile = file.path(DATA_DIR, '1/out/files', 'fooBar.csv')
+    manifestFile = file.path(DATA_DIR, '1/out/files', 'fooBar.csv.manifest')
+
+    fileConn <- file(dataFile)
+    writeLines("test", fileConn)
+    app$saveFileName('fooBar.csv', c('baz', 'buzz'))
+    app$saveFileName('BarFoo.csv', c('ping', 'pong'))
+    app$db$saveDataFrame(app$fileNames, app$fileNamesTable, rowNumbers = FALSE, incremental = TRUE)
+    app$saveFiles()
+
+    expect_true(file.exists(manifestFile))
+    expect_false(file.exists(file.path(DATA_DIR, '1/out/files', 'BarFoo.csv.manifest')))
+    
+    data <- readChar(manifestFile, file.info(manifestFile)$size)
+    config <- jsonlite::fromJSON(data)
+    
+    expect_equal(
+        config,
+        list(
+            'is_public' = FALSE,
+            'is_permanent' = TRUE,
+            'notify' = FALSE,
+            # file tag from application, two file tags from config, two file tags from file
+            'tags' = c('LuckyGuess', 'TestFile', 'RExecutorServiceTest', 'baz', 'buzz')
+        )
+    )
+    file.remove(manifestFile)
+    file.remove(dataFile)
+})
+
+test_that("save not files", {
+    Sys.setenv('KBC_TOKEN' = KBC_TOKEN)
+    app <- LGApplication$new(file.path(DATA_DIR, '1'))
+    app$readConfig()    
+    app$startUp()
+    app$saveFiles()
+})
