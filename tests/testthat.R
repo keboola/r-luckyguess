@@ -12,10 +12,10 @@ if (file.exists("config.R")) {
 
 # override with environment if any
 if (nchar(Sys.getenv("KBC_TOKEN")) > 0) {
-    apitoken <- Sys.getenv("KBC_TOKEN")  
+    KBC_TOKEN <- Sys.getenv("KBC_TOKEN")  
 }
 if (nchar(Sys.getenv("DATA_DIR")) > 0) {
-    apitoken <- Sys.getenv("DATA_DIR")  
+    DATA_DIR <- Sys.getenv("DATA_DIR")  
 }
 
 test_check("keboola.r.luckyguess")
