@@ -62,7 +62,7 @@
         "           'paramNested.columnName' = 'lg_column',",
         "           'paramNested.columnFoo' = 'double',",
         "           'paramNested.columnBar' = 'character',",
-        "           'packages' = c('leaps')",
+        "           'packages' = c()",
         "         )",
         "       }",
         "   )",
