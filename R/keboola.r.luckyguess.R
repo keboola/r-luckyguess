@@ -374,7 +374,7 @@ LGApplication <- setRefClass(
                 scriptParameters <<- paramsJ
                 checkErrors <<- checkErrors[!is.na(checkErrors)]
                 if (length(checkErrors) > 0) {
-                    stop(paste0("Some required parameters for module were not provided: ", paste(errors, collapse = " ")))
+                    stop(paste0("Some required parameters for module were not provided: ", paste(checkErrors, collapse = " ")))
                 }
                 
                 logInfo("Running module")
