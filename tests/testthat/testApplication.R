@@ -76,7 +76,7 @@ test_that("file manifests", {
             'is_permanent' = TRUE,
             'notify' = FALSE,
             # file tag from application, two file tags from config, two file tags from file
-            'tags' = c('LuckyGuess', 'TestFile', 'RExecutorServiceTest', 'baz', 'buzz')
+            'tags' = c('LuckyGuess', 'TestFile', 'RExecutorServiceTest', 'buzz', 'baz')
         )
     )
     file.remove(manifestFile)
