@@ -188,9 +188,8 @@ LGApplication <- setRefClass(
             con <- textConnection("installMessages", open = "w", local = TRUE)
             sink(con, type = c("output", "message"))                
             if (!is.null(packages) && (length(packages) > 0)) {
-                # repository <- "http://cran.us.r-project.org"
-                # use the czech mirror to increase speed slightly
-                repository <- "http://mirrors.nic.cz/R/"
+                repository <- "http://cran.us.r-project.org"
+                #repository <- "http://mirrors.nic.cz/R/"
                 # get only packages not yet installed
                 packagesToInstall <- packages[which(!(packages %in% rownames(installed.packages())))]
                 if (length(packagesToInstall) > 0) {
