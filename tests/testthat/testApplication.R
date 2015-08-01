@@ -69,16 +69,15 @@ test_that("file manifests", {
     data <- readChar(manifestFile, file.info(manifestFile)$size)
     config <- jsonlite::fromJSON(data)
     
-    expect_equal(
-        config,
-        list(
-            'is_public' = FALSE,
-            'is_permanent' = TRUE,
-            'notify' = FALSE,
-            # file tag from application, two file tags from config, two file tags from file
-            'tags' = c('LuckyGuess', 'TestFile', 'RExecutorServiceTest', 'buzz', 'baz')
-        )
-    )
+    expect_equal(config$is_public, FALSE)
+    expect_equal(config$is_permanent, TRUE)
+    expect_equal(config$notify, FALSE)
+    # file tag from application, two file tags from config, two file tags from file
+    expect_true('LuckyGuess' %in% config$tags)
+    expect_true('TestFile' %in% config$tags)
+    expect_true('RExecutorServiceTest' %in% config$tags)
+    expect_true('baz' %in% config$tags)
+    expect_true('buzz' %in% config$tags)
     file.remove(manifestFile)
     file.remove(dataFile)
 })
