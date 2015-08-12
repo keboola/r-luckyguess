@@ -8,7 +8,7 @@
       "paramNumber": 42,
       "paramNested": {
         "columnName": "Test-COLUMN",
-        "columnFoo": 4.2,
+        "columnFoo": "4.2",
         "columnBar": "test-string"
       }
     },
@@ -58,7 +58,7 @@
         "         list(",
         "           'paramNumber' = 'integer',",
         "           'paramNested.columnName' = 'lg_column',",
-        "           'paramNested.columnFoo' = 'double',",
+        "           'paramNested.columnFoo' = 'numeric',",
         "           'paramNested.columnBar' = 'character',",
         "           'packages' = c()",
         "         )",

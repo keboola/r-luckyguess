@@ -138,6 +138,15 @@ LGApplication <- setRefClass(
                                 checkWarnings <<- paste0("Parameter ", name, " in ", fullName, " has different datatype, got ", 
                                                     typeof(data[[name[1]]]), " expected ", dataType, ", and cannot be converted: ", w$message)
                             })
+                        } else if (dataType == "numeric") {
+                            # try to cast
+                            tryCatch({
+                                print(paste0("castin ", name[[1]], " to numeric"))
+                                data[[name[1]]] <- as.numeric(data[[name[1]]])
+                            }, warning = function(w) {
+                                checkWarnings <<- paste0("Parameter ", name, " in ", fullName, " has different datatype, got ", 
+                                                         typeof(data[[name[1]]]), " expected ", dataType, ", and cannot be converted: ", w$message)
+                            })
                         } else if (dataType == "logical") {
                             # try to cast
                             tryCatch({
