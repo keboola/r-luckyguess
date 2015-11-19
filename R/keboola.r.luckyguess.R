@@ -1,8 +1,5 @@
 #' Application which serves as a backend for LuckyGuess component
-#' @import methods
-#' @import keboola.r.docker.application
-#' @import keboola.redshift.r.client
-#' @import keboola.provisioning.r.client
+#' @import methods keboola.r.docker.application keboola.redshift.r.client keboola.provisioning.r.client
 #' @export LGApplication
 #' @exportClass LGApplication
 LGApplication <- setRefClass(
@@ -43,70 +40,79 @@ LGApplication <- setRefClass(
         workingDir = 'character'
     ),
     methods = list(
-        #' Constructor.
-        #'
-        #' @param Optional name of data directory, if not supplied then it
-        #'  will be read from command line argument.
-        #' @exportMethod
         initialize = function(args = NULL) {
+            "Constructor.
+            \\subsection{Parameters}{\\itemize{
+            \\item{\\code{fileName} Optional name of data directory, if not supplied then it
+            will be read from command line argument.}
+            }}"
             callSuper(args)
             keyValTable <<- 'r__key_val_results'
             fileNamesTable <<- 'r__file_names'
             tableNamesTable <<- 'r__table_names'
         },
 
-        
-        #' Save an arbitrary simple value.
-        #'
-        #' @param key String key name.
-        #' @param value Arbitrary value.
-        #' @param grouping Optional grouping of values if they are related
-        #' @exportMethod
         saveValue = function(name, value, grouping = 0) {
+            "Save an arbitrary simple value.
+            \\subsection{Parameters}{\\itemize{
+            \\item{\\code{key} String key name.}
+            \\item{\\code{value} Arbitrary value.}
+            \\item{\\code{grouping} Optional grouping of values if they are related.}
+            }}
+            \\subsection{Return Value}{TRUE}"
            newRow <- data.frame(name, value, grouping, stringsAsFactors = FALSE)           
            keyValue <<- rbind(keyValue, newRow)
+           TRUE
         },
         
-        
-        #' Save reference to a file.
-        #'
-        #' @param name String physical file path.
-        #' @param tags Character vector of file tags.
-        #' @exportMethod
         saveFileName = function(name, tags) {
+            "Save reference to a file.
+            \\subsection{Parameters}{\\itemize{
+            \\item{\\code{name} String physical file path.}
+            \\item{\\code{tags} Character vector of file tags.}
+            }}
+            \\subsection{Return Value}{TRUE}"
            newRow <- data.frame(name, tags, stringsAsFactors = FALSE)
            fileNames <<- rbind(fileNames, newRow)
+           TRUE
         },
         
-        
-        #' Save a dataframe to database using bulk inserts. The table will be created to accomodate to data frame columns.
-        #'
-        #' @param dataFrame A data frame, column names of data frame must correspond to column names of table
-        #' @param tableName Name of the table.
-        #' @param rowNumbers If true then the table will contain a column named 'row_num' with sequential row index
-        #' @param incremental If true then the table will not be recreated, only data will be inserted
-        #' @exportMethod
         saveDataFrame = function(dataFrame, tableName, rowNumbers = FALSE, incremental = FALSE, forcedColumnTypes) {
-           if (missing(forcedColumnTypes)) {
-               db$saveDataFrame(dataFrame, tableName, rowNumbers, incremental)
-           } else {
-               db$saveDataFrame(dataFrame, tableName, rowNumbers, incremental, forcedColumnTypes)        
-           }
-           newRow <- data.frame(name = tableName, stringsAsFactors = FALSE)
-           tableNames <<- rbind(tableNames, newRow)
+            "Save a dataframe to database using bulk inserts.
+            The table will be created to accomodate to data frame columns.
+            \\subsection{Parameters}{\\itemize{
+            \\item{\\code{dataFrame} A data frame, column names of data frame 
+            must correspond to column names of table.}
+            \\item{\\code{tableName} Name of the table.}
+            \\item{\\code{rowNumbers} If true then the table will contain a column 
+            named \\code{row_num} with sequential row index.}
+            \\item{\\code{incremental} If true then the table will not be recreated, 
+            only data will be inserted.}
+            }}
+            \\subsection{Return Value}{TRUE}"
+            if (missing(forcedColumnTypes)) {
+                db$saveDataFrame(dataFrame, tableName, rowNumbers, incremental)
+            } else {
+                db$saveDataFrame(dataFrame, tableName, rowNumbers, incremental, forcedColumnTypes)
+            }
+            newRow <- data.frame(name = tableName, stringsAsFactors = FALSE)
+            tableNames <<- rbind(tableNames, newRow)
+            TRUE
         },
 
-        
-        #' Recursive function to check a parameter provided in JSON data. Note that this function is called for
-        #'  each parameter (name) separately and it tries to find that 'name' in the provided 'data'. It will
-        #'  return the data possibly with coerced values
-        #' 
-        #' @param data JSON parsed data
-        #' @param name Name of the parameter, either a string or a vector of characters if the parameter is nested.
-        #' @param dataType String name of the R data type required
-        #' @param fullName Arbitrary named used for global identification of the parameter.
-        #' @return Partially modified data.
         checkParam = function(data, name, dataType, fullName) {
+            "Recursive function to check a parameter provided in JSON data. 
+            Note that this function is called for each parameter (name) separately and it
+            tries to find that \\code{name} in the provided \\code{data}. It will
+            return the data possibly with coerced values.
+            \\subsection{Parameters}{\\itemize{
+            \\item{\\code{data} JSON parsed data.}
+            \\item{\\code{name} Name of the parameter, either a string or a vector 
+            of characters if the parameter is nested.}
+            \\item{\\code{dataType} String name of the R data type required.}
+            \\item{\\code{fullName} Arbitrary named used for global identification of the parameter.}
+            }}
+            \\subsection{Return Value}{List with partially modified data.}"            
             checkWarnings <<- NA
             if (length(name) > 1) {
                 # name is still nested, we need to go deeper   
@@ -175,12 +181,13 @@ LGApplication <- setRefClass(
             list("data" = data, "warnings" = checkWarnings)
         },
         
-
-        #' Silence all but error output from a command.
-        #' 
-        #' Note: this function does nothing if the debugMode variable is set to TRUE.
-        #' @return Command return value.
         silence = function(command) {
+            "Silence all but error output from a command.
+            Note: this function does nothing if the debugMode variable is set to TRUE.
+            \\subsection{Parameters}{\\itemize{
+            \\item{\\code{command} Arbitrary command.}
+            }}
+            \\subsection{Return Value}{ Command return value.}"   
             #if (!debugMode) {
                 msg.trap <- capture.output(suppressPackageStartupMessages(suppressMessages(suppressWarnings(ret <- command))))
             #} else {
@@ -189,11 +196,12 @@ LGApplication <- setRefClass(
             ret
         },
         
-        
-        #' Install and load all required libraries.
-        #' 
-        #' @param character vector of package names to install
         installModulePackages = function(packages = c()) {
+            "Install and load all required libraries.
+            \\subsection{Parameters}{\\itemize{
+            \\item{\\code{packages} Vector of package names.}
+            }}
+            \\subsection{Return Value}{TRUE}"
             con <- textConnection("installMessages", open = "w", local = TRUE)
             sink(con, type = c("output", "message"))                
             if (!is.null(packages) && (length(packages) > 0)) {
@@ -221,11 +229,12 @@ LGApplication <- setRefClass(
             }
             sink(NULL, type = c("output", "message"))
             logDebug(installMessages)
+            TRUE
         },
         
-        
-        #' Save uploaded files (move them to out directory and create manifests)
         saveFiles = function() {
+            "Save uploaded files (move them to out directory and create manifests)
+            \\subsection{Return Value}{TRUE}"
             logDebug("Saving files")
             files <- db$select(paste0("SELECT name, tags FROM \"", db$schema, "\".\"r__file_names\";"))
             fileList <- split(files, files$name)
@@ -252,12 +261,12 @@ LGApplication <- setRefClass(
                     }
                 }
             } # else no files
+            TRUE
         },
 
-        
-        #' Validate application configuration
-        #' @exportMethod
         validate = function() {
+            "Save uploaded files (move them to out directory and create manifests)
+            \\subsection{Return Value}{TRUE}"
             # validate environment
             token <<- getEnv('KBC_TOKEN')
             runId <<- getEnv('KBC_RUNID')
@@ -297,12 +306,12 @@ LGApplication <- setRefClass(
             logDebug("Script parameters set to: ")
             logDebug(scriptParameters)
             
-            # tohle cely bude taky package a main.R bude jen v dockerFilu udelany
+            TRUE
         },
-        
-        #' Main application entry point
-        #' @exportMethod
+
         startUp = function() {
+            "Start up the Application, initialize working directory and database tables.
+            \\subsection{Return Value}{TRUE}"
             logInfo("Starting")
             logDebug("Validating parameters")
             validate()
@@ -345,9 +354,9 @@ LGApplication <- setRefClass(
             db$update(paste0("CREATE TABLE ", tableNamesTable, " (name VARCHAR(200));"))        
         },
         
-        #' Main application entry point
-        #' @exportMethod
         run = function() {
+            "Main application entry point.
+            \\subsection{Return Value}{TRUE}"
             startUp()
             # prepare the module
             logInfo("Preparing module")
@@ -397,11 +406,13 @@ LGApplication <- setRefClass(
             TRUE
         },
 
-        #' Convert LG type definition to an R data type
-        #' @param type LG data type string ('integer', 'datetime', etc.)
-        #' @param mode LG variable mode ('continuous', 'discrete')
-        #' @return string R data type name.
         getConvertedDataType = function(type, mode) {
+            "Convert LG type definition to an R data type.
+            \\subsection{Parameters}{\\itemize{
+            \\item{\\code{type} LG data type string (\\code{integer}, \\code{datetime}, etc.).}
+            \\item{\\code{mode} LG variable mode (\\code{continuous}, \\code{discrete}).}
+            }}
+            \\subsection{Return Value}{String with R data type name}"            
             if (is.null(type) || is.na(type) || (length(type) == 0)) {
                 ret <- 'character'
             } else if (type == "integer" || type == "float") {
@@ -422,15 +433,16 @@ LGApplication <- setRefClass(
             return(ret)
         },
 
-        #' Apply column types detected by LG to a data frame.
-        #' @param types Data frame with contents of table with LG datatypes 
-        #'  (this table is usually named 'VAI__1__Actual' in SAPI)
-        #' @param cleanData A data frame with actual data, its columns are
-        #'  expected to be listed as rows in the types table.
-        #' @return data frame supplied in cleanData parameter with 
-        #'  applied data types.
-        #' @exportMethod 
-        getCleanData = function(types, cleanData) {   
+        getCleanData = function(types, cleanData) {
+            "Apply column types detected by LG to a data frame.
+            \\subsection{Parameters}{\\itemize{
+            \\item{\\code{types} Data frame with contents of table with LG datatypes 
+            (this table is usually named \\code{VAI__1} in SAPI).}
+            \\item{\\code{cleanData} A data frame with actual data, its columns are
+            expected to be listed as rows in the types table.}
+            }}
+            \\subsection{Return Value}{data.frame supplied in cleanData parameter with
+            applied data types.}"            
             # remove columns run_id and _timestamp which are internal only
             cleanData <- cleanData[,!names(cleanData) %in% c("run_id", "_timestamp")]
             out <- lapply(
