@@ -44,7 +44,7 @@ of characters if the parameter is nested.}
 \item{\code{initialize(args = NULL)}}{Constructor.
 \subsection{Parameters}{\itemize{
 \item{\code{args} Optional name of data directory, if not supplied then it
-will be read from command line argument or environment KBC_DATA_DIR.}
+will be read from command line argument or environment KBC_DATADIR.}
 }}
 \subsection{Return Value}{Response body - either list or string in case the body cannot be parsed as JSON.}}
 
@@ -54,7 +54,7 @@ will be read from command line argument or environment KBC_DATA_DIR.}
 }}
 \subsection{Return Value}{TRUE}}
 
-\item{\code{run()}}{Main application function.
+\item{\code{run()}}{Main application function, this should be overriden in child class.
 \subsection{Return Value}{NULL}}
 
 \item{\code{saveDataFrame(dataFrame, tableName, rowNumbers = FALSE, incremental = FALSE,

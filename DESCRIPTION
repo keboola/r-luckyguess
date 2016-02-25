@@ -14,4 +14,4 @@ Suggests:
     testthat
 Description: Application proessed the supplied R script with parameters.
 License: MIT + file LICENSE
-RoxygenNote: 5.0.0.9000
+RoxygenNote: 5.0.1
