@@ -3,7 +3,7 @@ library(testthat)
 # default values
 KBC_TOKEN = 'yourToken'
 KBC_RUNID = '123'
-DATA_DIR = 'tests/data'
+KBC_DATADIR = 'tests/data'
 
 # override with config if any
 if (file.exists("config.R")) {
@@ -14,8 +14,8 @@ if (file.exists("config.R")) {
 if (nchar(Sys.getenv("KBC_TOKEN")) > 0) {
     KBC_TOKEN <- Sys.getenv("KBC_TOKEN")  
 }
-if (nchar(Sys.getenv("DATA_DIR")) > 0) {
-    DATA_DIR <- Sys.getenv("DATA_DIR")  
+if (nchar(Sys.getenv("KBC_DATADIR")) > 0) {
+    KBC_DATADIR <- Sys.getenv("KBC_DATADIR")  
 }
 
 test_check("keboola.r.luckyguess")

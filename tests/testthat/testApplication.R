@@ -1,7 +1,7 @@
 test_that("validate", {
     Sys.setenv('KBC_TOKEN' = KBC_TOKEN)
     Sys.setenv('KBC_RUNID' = KBC_RUNID)
-    app <- LGApplication$new(file.path(DATA_DIR, '1'))
+    app <- LGApplication$new(file.path(KBC_DATADIR, '1'))
     app$readConfig()
     app$validate()
     expect_equal("numeric", class(app$scriptParameters$paramNested$columnFoo))
@@ -11,7 +11,7 @@ test_that("validate", {
 test_that("validate no tags", {
     Sys.setenv('KBC_TOKEN' = KBC_TOKEN)
     Sys.setenv('KBC_RUNID' = KBC_RUNID)
-    app <- LGApplication$new(file.path(DATA_DIR, '2'))
+    app <- LGApplication$new(file.path(KBC_DATADIR, '2'))
     app$readConfig()
     app$validate()
     expect_equal(1, length(app$fileTags))
@@ -20,7 +20,7 @@ test_that("validate no tags", {
 test_that("validate type cast", {
     Sys.setenv('KBC_TOKEN' = KBC_TOKEN)
     Sys.setenv('KBC_RUNID' = KBC_RUNID)
-    app <- LGApplication$new(file.path(DATA_DIR, '2'))
+    app <- LGApplication$new(file.path(KBC_DATADIR, '2'))
     app$readConfig()
     app$run()
     expect_equal("numeric", class(app$scriptParameters$paramNested$columnFoo))
@@ -29,7 +29,7 @@ test_that("validate type cast", {
 test_that("column conversions", {
     Sys.setenv('KBC_TOKEN' = KBC_TOKEN)
     Sys.setenv('KBC_RUNID' = KBC_RUNID)
-    app <- LGApplication$new(file.path(DATA_DIR, '2'))
+    app <- LGApplication$new(file.path(KBC_DATADIR, '2'))
     app$readConfig()
     app$validate()
     app$run()
@@ -39,7 +39,7 @@ test_that("column conversions", {
 
 test_that("run without runid", {
     Sys.setenv('KBC_TOKEN' = KBC_TOKEN)
-    app <- LGApplication$new(file.path(DATA_DIR, '1'))
+    app <- LGApplication$new(file.path(KBC_DATADIR, '1'))
     app$readConfig()
     app$validate()
     app$run()
@@ -49,22 +49,22 @@ test_that("run without runid", {
 test_that("run", {
     Sys.setenv('KBC_TOKEN' = KBC_TOKEN)
     Sys.setenv('KBC_RUNID' = KBC_RUNID)
-    app <- LGApplication$new(file.path(DATA_DIR, '1'))
+    app <- LGApplication$new(file.path(KBC_DATADIR, '1'))
     app$readConfig()
     app$run()
-    expect_true(file.exists(file.path(DATA_DIR, '1/out/files', 'exampleGraph.png')))
-    expect_true(file.exists(file.path(DATA_DIR, '1/out/files', 'exampleGraph.png.manifest')))
+    expect_true(file.exists(file.path(KBC_DATADIR, '1/out/files', 'exampleGraph.png')))
+    expect_true(file.exists(file.path(KBC_DATADIR, '1/out/files', 'exampleGraph.png.manifest')))
 })
 
 
 test_that("file manifests", {
     Sys.setenv('KBC_TOKEN' = KBC_TOKEN)
-    app <- LGApplication$new(file.path(DATA_DIR, '1'))
+    app <- LGApplication$new(file.path(KBC_DATADIR, '1'))
     app$readConfig()    
     app$startUp()
 
-    dataFile = file.path(DATA_DIR, '1/out/files', 'fooBar.csv')
-    manifestFile = file.path(DATA_DIR, '1/out/files', 'fooBar.csv.manifest')
+    dataFile = file.path(KBC_DATADIR, '1/out/files', 'fooBar.csv')
+    manifestFile = file.path(KBC_DATADIR, '1/out/files', 'fooBar.csv.manifest')
 
     fileConn <- file(dataFile)
     writeLines("test", fileConn)
@@ -74,7 +74,7 @@ test_that("file manifests", {
     app$saveFiles()
 
     expect_true(file.exists(manifestFile))
-    expect_false(file.exists(file.path(DATA_DIR, '1/out/files', 'BarFoo.csv.manifest')))
+    expect_false(file.exists(file.path(KBC_DATADIR, '1/out/files', 'BarFoo.csv.manifest')))
     
     data <- readChar(manifestFile, file.info(manifestFile)$size)
     config <- jsonlite::fromJSON(data)
@@ -94,7 +94,7 @@ test_that("file manifests", {
 
 test_that("save not files", {
     Sys.setenv('KBC_TOKEN' = KBC_TOKEN)
-    app <- LGApplication$new(file.path(DATA_DIR, '1'))
+    app <- LGApplication$new(file.path(KBC_DATADIR, '1'))
     app$readConfig()    
     app$startUp()
     app$saveFiles()

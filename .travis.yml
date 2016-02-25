@@ -16,3 +16,6 @@ r_github_packages:
 
 notifications:
   slack: keboola:8EW7Y0Kqvxxames1Rfp6feaE
+
+before_install:
+ - export KBC_DATADIR=$TRAVIS_BUILD_DIR/tests/data/

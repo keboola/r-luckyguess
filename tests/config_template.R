@@ -2,6 +2,6 @@
 KBC_TOKEN = 'yourToken'
 KBC_RUNID = '123'
 # Path to dir with sample configuration
-DATA_DIR = 'tests/data'
+KBC_DATADIR = 'tests/data'
 
 
