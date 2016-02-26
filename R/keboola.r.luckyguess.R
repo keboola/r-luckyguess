@@ -322,8 +322,6 @@ LGApplication <- setRefClass(
                 unlink(workingDir, recursive = TRUE)
             }
             dir.create(workingDir, recursive = TRUE)
-            # make working dir also library dir so that parallel runs do not clash with each other
-            .libPaths(c(.libPaths(), workingDir)) 
             logDebug(paste0("Created working directory: ", workingDir))
             
             # get database credentials and connect to database

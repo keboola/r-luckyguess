@@ -15,3 +15,8 @@ Suggests:
 Description: Application proessed the supplied R script with parameters.
 License: MIT + file LICENSE
 RoxygenNote: 5.0.1
+Remotes: 
+    keboola/r-docker-application,
+    keboola/redshift-r-client,
+    keboola/provisioning-r-client
+    
