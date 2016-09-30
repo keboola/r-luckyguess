@@ -11,6 +11,19 @@ Application which serves as a backend for LuckyGuess component
 \section{Methods}{
 
 \describe{
+\item{\code{checkParam(data, name, dataType, fullName)}}{Recursive function to check a parameter provided in JSON data. 
+Note that this function is called for each parameter (name) separately and it
+tries to find that \code{name} in the provided \code{data}. It will
+return the data possibly with coerced values.
+\subsection{Parameters}{\itemize{
+\item{\code{data} JSON parsed data.}
+\item{\code{name} Name of the parameter, either a string or a vector 
+of characters if the parameter is nested.}
+\item{\code{dataType} String name of the R data type required.}
+\item{\code{fullName} Arbitrary named used for global identification of the parameter.}
+}}
+\subsection{Return Value}{List with partially modified data.}}
+
 \item{\code{getCleanData(types, cleanData)}}{Apply column types detected by LG to a data frame.
 \subsection{Parameters}{\itemize{
 \item{\code{types} Data frame with contents of table with LG datatypes 
@@ -27,19 +40,6 @@ applied data types.}}
 \item{\code{mode} LG variable mode (\code{continuous}, \code{discrete}).}
 }}
 \subsection{Return Value}{String with R data type name}}
-
-\item{\code{checkParam(data, name, dataType, fullName)}}{Recursive function to check a parameter provided in JSON data. 
-Note that this function is called for each parameter (name) separately and it
-tries to find that \code{name} in the provided \code{data}. It will
-return the data possibly with coerced values.
-\subsection{Parameters}{\itemize{
-\item{\code{data} JSON parsed data.}
-\item{\code{name} Name of the parameter, either a string or a vector 
-of characters if the parameter is nested.}
-\item{\code{dataType} String name of the R data type required.}
-\item{\code{fullName} Arbitrary named used for global identification of the parameter.}
-}}
-\subsection{Return Value}{List with partially modified data.}}
 
 \item{\code{initialize(args = NULL)}}{Constructor.
 \subsection{Parameters}{\itemize{
