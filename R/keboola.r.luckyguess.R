@@ -1,5 +1,5 @@
 #' Application which serves as a backend for LuckyGuess component
-#' @import methods keboola.r.docker.application keboola.redshift.r.client keboola.provisioning.r.client
+#' @import methods keboola.r.docker.application keboola.backend.r.client keboola.provisioning.r.client
 #' @export LGApplication
 #' @exportClass LGApplication
 LGApplication <- setRefClass(
@@ -26,8 +26,8 @@ LGApplication <- setRefClass(
         fileNames = 'data.frame',
         # storage for resulting tables
         tableNames = 'data.frame',
-        # connection to redshift database (RedshiftDriver)
-        db = 'RedshiftDriver',
+        # connection to keboola database (BackendDriver)
+        db = 'BackendDriver',
         # name of table with key-value results
         keyValTable = 'character',
         # name of table with generated files
@@ -334,20 +334,17 @@ LGApplication <- setRefClass(
             # get database credentials and connect to database
             client <- ProvisioningClient$new(backendType, token, runId)
             credentials <- client$getCredentials('luckyguess')$credentials 
-            if (.self$backendType == "snowflake") {
-                db <<- Sn
-            } else {
-                db <<- RedshiftDriver$new()
-                db$connect(
-                    credentials$host, 
-                    credentials$db, 
-                    credentials$user, 
-                    credentials$password, 
-                    credentials$schema
-                )    
-            }
+            db <<- RedshiftDriver$new()
+            db$connect(
+                credentials$host, 
+                credentials$db, 
+                credentials$user, 
+                credentials$password, 
+                credentials$schema,
+                backendType = .self$backendType
+            )
             
-            logDebug(paste0("Connected to database schema ", credentials$schema))
+            logDebug(paste0("Connected to", .self$backendType, "database schema ", credentials$schema))
 
             # prepare database structure
             if (db$tableExists(keyValTable)) {
