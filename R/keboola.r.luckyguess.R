@@ -334,7 +334,7 @@ LGApplication <- setRefClass(
             # get database credentials and connect to database
             client <- ProvisioningClient$new(backendType, token, runId)
             credentials <- client$getCredentials('luckyguess')$credentials 
-            db <<- RedshiftDriver$new()
+            db <<- BackendDriver$new()
             db$connect(
                 credentials$host, 
                 credentials$db, 

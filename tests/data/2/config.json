@@ -2,6 +2,7 @@
   "parameters": {
     "debug": true,
     "sourceTable": "non-existent-table",
+    "backendType": "redshift-workspace",
     "fileTags": [
     ],
     "scriptParameters": {
