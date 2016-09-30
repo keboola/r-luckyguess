@@ -10,6 +10,8 @@ LGApplication <- setRefClass(
         token = 'ANY',
         # KBC runId (read from environment)
         runId = 'ANY',
+        # Type of workspace backend (redshift-workspace or snowflake, provided in config)
+        backendType = 'character',
         # source table in database (provided in config)
         sourceTable = 'character',
         # script parameters (provided in config)
@@ -278,6 +280,11 @@ LGApplication <- setRefClass(
             }
             
             # validate parameters
+            validBackends <- c("redshift-workspace", "snowflake")
+            backendType <<- configData$parameters$backendType
+            if (empty(backendType) || !(backendType %in% validBackends)) {
+                stop(paste("Unsupported backendType", backendType, "Must be one of", validBackends))
+            }
             sourceTable <<- configData$parameters$sourceTable
             if (empty(sourceTable)) {
                 stop("Source table must be provided in configuration.")
@@ -325,16 +332,21 @@ LGApplication <- setRefClass(
             logDebug(paste0("Created working directory: ", workingDir))
             
             # get database credentials and connect to database
-            client <- ProvisioningClient$new('redshift', token, runId)
-            credentials <- client$getCredentials('transformations')$credentials 
-            db <<- RedshiftDriver$new()
-            db$connect(
-                credentials$host, 
-                credentials$db, 
-                credentials$user, 
-                credentials$password, 
-                credentials$schema
-            )
+            client <- ProvisioningClient$new(backendType, token, runId)
+            credentials <- client$getCredentials('luckyguess')$credentials 
+            if (.self$backendType == "snowflake") {
+                db <<- Sn
+            } else {
+                db <<- RedshiftDriver$new()
+                db$connect(
+                    credentials$host, 
+                    credentials$db, 
+                    credentials$user, 
+                    credentials$password, 
+                    credentials$schema
+                )    
+            }
+            
             logDebug(paste0("Connected to database schema ", credentials$schema))
 
             # prepare database structure
