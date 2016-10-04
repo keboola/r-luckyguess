@@ -238,7 +238,7 @@ LGApplication <- setRefClass(
             "Save uploaded files (move them to out directory and create manifests)
             \\subsection{Return Value}{TRUE}"
             logDebug("Saving files")
-            files <- db$select(paste0("SELECT name, tags FROM \"", db$schema, "\".\"r__file_names\";"))
+            files <- db$select(paste0("SELECT \"name\", \"tags\" FROM \"", db$schema, "\".\"r__file_names\";"))
             fileList <- split(files, files$name)
             if (length(fileList) > 0) {
                 for (i in 1:length(fileList)) {
