@@ -330,13 +330,15 @@ LGApplication <- setRefClass(
             }
             dir.create(workingDir, recursive = TRUE)
             logDebug(paste0("Created working directory: ", workingDir))
-            
+            logDebug(paste("Connecting to backend: " , .self$backendType))
             # get database credentials and connect to database
-            client <- ProvisioningClient$new(backendType, token, runId)
+            client <- ProvisioningClient$new(.self$backendType, token, runId)
             credentials <- client$getCredentials('luckyguess')$credentials 
+            logDebug("GOT CREDENTIALS:")
+            print(credentials)
             db <<- BackendDriver$new()
             db$connect(
-                credentials$host, 
+                credentials$hostname, 
                 credentials$db, 
                 credentials$user, 
                 credentials$password, 
@@ -356,9 +358,9 @@ LGApplication <- setRefClass(
             if (db$tableExists(tableNamesTable)) {
                 db$update(paste("DROP TABLE ", tableNamesTable, ";", sep = ""))
             }            
-            db$update(paste0("CREATE TABLE ", keyValTable, " (name VARCHAR(200), value VARCHAR(200), grouping VARCHAR(200), PRIMARY KEY (name));"))
-            db$update(paste0("CREATE TABLE ", fileNamesTable, " (name VARCHAR(200), tags VARCHAR(200));"))
-            db$update(paste0("CREATE TABLE ", tableNamesTable, " (name VARCHAR(200));"))        
+            db$update(paste0("CREATE TABLE ", keyValTable, " (\"name\" VARCHAR(200), \"value\" VARCHAR(200), \"grouping\" VARCHAR(200), PRIMARY KEY (\"name\"));"))
+            db$update(paste0("CREATE TABLE ", fileNamesTable, " (\"name\" VARCHAR(200), \"tags\" VARCHAR(200));"))
+            db$update(paste0("CREATE TABLE ", tableNamesTable, " (\"name\" VARCHAR(200));"))        
         },
         
         run = function() {
