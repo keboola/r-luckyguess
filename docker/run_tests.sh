@@ -9,7 +9,9 @@ R CMD check keboola.r.luckyguess_* && grep -q -R "/code/keboola.r.luckyguess.Rch
 if [ $? -eq 0 ]
 then
   echo "Test passed successfully."
+  exit 0
 else
   echo "Tests failed." >&2
   cat /code/keboola.r.luckyguess.Rcheck/00check.log
+  exit 1
 fi
