@@ -10,7 +10,7 @@ RUN Rscript /home/docker/init.R
 
 # Install the r-luckyguess package which is in the local directory
 RUN R CMD build .
-RUN R CMD INSTALL keboola.r.luckyguess_*	  
+RUN R CMD install keboola.r.luckyguess_*	  
 
 # Run the application
 ENTRYPOINT Rscript /home/docker/main.R /data/
