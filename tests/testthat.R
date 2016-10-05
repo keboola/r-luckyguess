@@ -15,7 +15,7 @@ if (nchar(Sys.getenv("KBC_TOKEN")) > 0) {
     KBC_TOKEN <- Sys.getenv("KBC_TOKEN")  
 }
 if (nchar(Sys.getenv("KBC_RUNID")) > 0) {
-    KBC_TOKEN <- Sys.getenv("KBC_RUNID")  
+    KBC_RUNID <- Sys.getenv("KBC_RUNID")  
 }
 if (nchar(Sys.getenv("KBC_DATADIR")) > 0) {
     KBC_DATADIR <- Sys.getenv("KBC_DATADIR")  

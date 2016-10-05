@@ -1,14 +1,16 @@
 #!/bin/bash
 echo "Starting tests." >&1
 
-export KBC_DATADIR=/data/
+export KBC_DATADIR=/code/tests/data/
 cd /code/
 R CMD build .
 
 echo "Build finished." >&1
-if [ R CMD check keboola.r.luckyguess_* -eq 0 ] ; then
+R CMD check keboola.r.luckyguess_*
+if [ $? -eq 0 ] ; then
 	echo "Test passed successfully." >&1
-	if [ grep -q -R "/code/keboola.r.luckyguess.Rcheck/00check.log" ] ; then
+	grep -q -R "/code/keboola.r.luckyguess.Rcheck/00check.log"
+	if [ $? -eq 0 ] ; then
 		echo "No warnings found." >&1
 	else
 		echo "Warnings found." >&2

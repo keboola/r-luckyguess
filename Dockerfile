@@ -5,6 +5,8 @@ WORKDIR /home
 # Initialize the LGR runner
 COPY . /home/
 
+RUN R CMD javareconf
+
 # Install some commonly used R packages and the R application
 RUN Rscript /home/docker/init.R
 
