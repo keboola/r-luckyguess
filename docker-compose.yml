@@ -1,0 +1,10 @@
+version: '2'
+services:
+  r-luckyguess:
+    build: .
+    image: keboola/r-luckyguess
+    tty: true
+    stdin_open: true
+    command: bash
+    volumes:
+      - ./:/code
