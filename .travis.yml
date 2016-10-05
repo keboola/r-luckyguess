@@ -10,7 +10,7 @@ after_success:
 deploy:
   provider: script
   skip_cleanup: true
-  script: /code/docker/deploy.sh
+  script: ./docker/deploy.sh
   on:
     tags: true  
 
