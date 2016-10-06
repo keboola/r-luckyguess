@@ -350,17 +350,17 @@ LGApplication <- setRefClass(
 
             # prepare database structure
             if (db$tableExists(keyValTable)) {
-                db$update(paste("DROP TABLE ", keyValTable, ";", sep = ""))
+                db$update(paste("DROP TABLE \"", keyValTable, "\";", sep = ""))
             }
             if (db$tableExists(fileNamesTable)) {
-                db$update(paste("DROP TABLE ", fileNamesTable, ";", sep = ""))
+                db$update(paste("DROP TABLE \"", fileNamesTable, "\";", sep = ""))
             }
             if (db$tableExists(tableNamesTable)) {
-                db$update(paste("DROP TABLE ", tableNamesTable, ";", sep = ""))
+                db$update(paste("DROP TABLE \"", tableNamesTable, "\";", sep = ""))
             }            
-            db$update(paste0("CREATE TABLE ", keyValTable, " (\"name\" VARCHAR(200), \"value\" VARCHAR(200), \"grouping\" VARCHAR(200), PRIMARY KEY (\"name\"));"))
-            db$update(paste0("CREATE TABLE ", fileNamesTable, " (\"name\" VARCHAR(200), \"tags\" VARCHAR(200));"))
-            db$update(paste0("CREATE TABLE ", tableNamesTable, " (\"name\" VARCHAR(200));"))        
+            db$update(paste0("CREATE TABLE \"", keyValTable, "\" (\"name\" VARCHAR(200), \"value\" VARCHAR(200), \"grouping\" VARCHAR(200), PRIMARY KEY (\"name\"));"))
+            db$update(paste0("CREATE TABLE \"", fileNamesTable, "\" (\"name\" VARCHAR(200), \"tags\" VARCHAR(200));"))
+            db$update(paste0("CREATE TABLE \"", tableNamesTable, "\" (\"name\" VARCHAR(200));"))
         },
         
         run = function() {
