@@ -21,4 +21,4 @@ if (nchar(Sys.getenv("KBC_DATADIR")) > 0) {
     KBC_DATADIR <- Sys.getenv("KBC_DATADIR")  
 }
 
-test_check("keboola.r.luckyguess")
+test_check("keboola.r.luckyguess", reporter = "summary")
