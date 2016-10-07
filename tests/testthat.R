@@ -21,4 +21,7 @@ if (nchar(Sys.getenv("KBC_DATADIR")) > 0) {
     KBC_DATADIR <- Sys.getenv("KBC_DATADIR")  
 }
 
-test_check("keboola.r.luckyguess", reporter = "summary")
+rep <- MultiReporter$new(
+    reporters = list(SummaryReporter$new(), FailReporter$new(), CheckReporter$new())
+)
+test_check("keboola.r.luckyguess", reporter = rep)

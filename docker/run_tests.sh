@@ -20,5 +20,6 @@ if [ $? -eq 0 ] ; then
 else
 	echo "Tests failed." >&2
 	cat /code/keboola.r.luckyguess.Rcheck/00check.log
+	cat /code/keboola.r.luckyguess.Rcheck/tests/testthat.Rout.fail
 	exit 1
 fi
