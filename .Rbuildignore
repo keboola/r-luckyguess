@@ -3,3 +3,4 @@
 \.travis\.yml
 docker
 DockerFile
+docker-compose\.yml
