@@ -11,8 +11,8 @@ install_github('keboola/redshift-r-client', ref = "1.0.10")
 install_github('snowflakedb/dplyr-snowflakedb', ref="v0.2.0")
 install_github('keboola/provisioning-r-client', ref = "1.0.3")
 install_github('keboola/backend-r-client', ref = "0.0.4")
-install_github('keboola/r-application', ref = "1.0.1")
-install_github('keboola/r-docker-application', ref = "1.0.0")
+install_github('keboola/r-application', ref = "1.0.2")
+install_github('keboola/r-docker-application', ref = "1.0.2")
 
 # install commonly used packages from github
 install_github('keboola/AnomalyDetection', ref = "master")
