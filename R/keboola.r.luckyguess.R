@@ -335,7 +335,6 @@ LGApplication <- setRefClass(
             client <- ProvisioningClient$new(.self$backendType, token, runId)
             credentials <- client$getCredentials('luckyguess')$credentials 
             logDebug("GOT CREDENTIALS:")
-            print(credentials)
             db <<- BackendDriver$new()
             db$connect(
                 credentials$hostname, 
