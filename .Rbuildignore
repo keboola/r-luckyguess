@@ -1,3 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 \.travis\.yml
+docker
+DockerFile
+docker-compose\.yml

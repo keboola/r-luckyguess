@@ -36,6 +36,16 @@ test_that("column conversions", {
     expect_equal('test-column', app$scriptParameters$paramNested$columnName)
 })
 
+test_that("column conversions_snowflake", {
+    Sys.setenv('KBC_TOKEN' = KBC_TOKEN)
+    Sys.setenv('KBC_RUNID' = KBC_RUNID)
+    app <- LGApplication$new(file.path(KBC_DATADIR, '3'))
+    app$readConfig()
+    app$validate()
+    app$run()
+    expect_equal('test-column', app$scriptParameters$paramNested$columnName)
+})
+
 
 test_that("run without runid", {
     Sys.setenv('KBC_TOKEN' = KBC_TOKEN)

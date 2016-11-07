@@ -2,7 +2,7 @@
   "parameters": {
     "debug": true,
     "sourceTable": "non-existent-table",
-    "backendType": "redshift-workspace",
+    "backendType": "snowflake",
     "fileTags": [
     ],
     "scriptParameters": {

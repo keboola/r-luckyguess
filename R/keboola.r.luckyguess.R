@@ -1,5 +1,5 @@
 #' Application which serves as a backend for LuckyGuess component
-#' @import methods keboola.r.docker.application keboola.redshift.r.client keboola.provisioning.r.client
+#' @import methods keboola.r.docker.application keboola.backend.r.client keboola.provisioning.r.client
 #' @export LGApplication
 #' @exportClass LGApplication
 LGApplication <- setRefClass(
@@ -10,6 +10,8 @@ LGApplication <- setRefClass(
         token = 'ANY',
         # KBC runId (read from environment)
         runId = 'ANY',
+        # Type of workspace backend (redshift-workspace or snowflake, provided in config)
+        backendType = 'character',
         # source table in database (provided in config)
         sourceTable = 'character',
         # script parameters (provided in config)
@@ -24,8 +26,8 @@ LGApplication <- setRefClass(
         fileNames = 'data.frame',
         # storage for resulting tables
         tableNames = 'data.frame',
-        # connection to redshift database (RedshiftDriver)
-        db = 'RedshiftDriver',
+        # connection to keboola database (BackendDriver)
+        db = 'BackendDriver',
         # name of table with key-value results
         keyValTable = 'character',
         # name of table with generated files
@@ -236,7 +238,7 @@ LGApplication <- setRefClass(
             "Save uploaded files (move them to out directory and create manifests)
             \\subsection{Return Value}{TRUE}"
             logDebug("Saving files")
-            files <- db$select(paste0("SELECT name, tags FROM \"", db$schema, "\".\"r__file_names\";"))
+            files <- db$select(paste0("SELECT \"name\", \"tags\" FROM \"", fileNamesTable, "\";"))
             fileList <- split(files, files$name)
             if (length(fileList) > 0) {
                 for (i in 1:length(fileList)) {
@@ -278,6 +280,11 @@ LGApplication <- setRefClass(
             }
             
             # validate parameters
+            validBackends <- c("redshift-workspace", "snowflake")
+            backendType <<- configData$parameters$backendType
+            if (empty(backendType) || !(backendType %in% validBackends)) {
+                stop(paste("Unsupported backendType", backendType, "Must be one of", validBackends))
+            }
             sourceTable <<- configData$parameters$sourceTable
             if (empty(sourceTable)) {
                 stop("Source table must be provided in configuration.")
@@ -323,33 +330,36 @@ LGApplication <- setRefClass(
             }
             dir.create(workingDir, recursive = TRUE)
             logDebug(paste0("Created working directory: ", workingDir))
-            
+            logDebug(paste("Connecting to backend: " , .self$backendType))
             # get database credentials and connect to database
-            client <- ProvisioningClient$new('redshift', token, runId)
-            credentials <- client$getCredentials('transformations')$credentials 
-            db <<- RedshiftDriver$new()
+            client <- ProvisioningClient$new(.self$backendType, token, runId)
+            credentials <- client$getCredentials('luckyguess')$credentials 
+            logDebug("GOT CREDENTIALS:")
+            db <<- BackendDriver$new()
             db$connect(
-                credentials$host, 
+                credentials$hostname, 
                 credentials$db, 
                 credentials$user, 
                 credentials$password, 
-                credentials$schema
+                credentials$schema,
+                backendType = .self$backendType
             )
-            logDebug(paste0("Connected to database schema ", credentials$schema))
+            
+            logDebug(paste0("Connected to", .self$backendType, "database schema ", credentials$schema))
 
             # prepare database structure
             if (db$tableExists(keyValTable)) {
-                db$update(paste("DROP TABLE ", keyValTable, ";", sep = ""))
+                db$update(paste("DROP TABLE \"", keyValTable, "\";", sep = ""))
             }
             if (db$tableExists(fileNamesTable)) {
-                db$update(paste("DROP TABLE ", fileNamesTable, ";", sep = ""))
+                db$update(paste("DROP TABLE \"", fileNamesTable, "\";", sep = ""))
             }
             if (db$tableExists(tableNamesTable)) {
-                db$update(paste("DROP TABLE ", tableNamesTable, ";", sep = ""))
+                db$update(paste("DROP TABLE \"", tableNamesTable, "\";", sep = ""))
             }            
-            db$update(paste0("CREATE TABLE ", keyValTable, " (name VARCHAR(200), value VARCHAR(200), grouping VARCHAR(200), PRIMARY KEY (name));"))
-            db$update(paste0("CREATE TABLE ", fileNamesTable, " (name VARCHAR(200), tags VARCHAR(200));"))
-            db$update(paste0("CREATE TABLE ", tableNamesTable, " (name VARCHAR(200));"))        
+            db$update(paste0("CREATE TABLE \"", keyValTable, "\" (\"name\" VARCHAR(200), \"value\" VARCHAR(200), \"grouping\" VARCHAR(200), PRIMARY KEY (\"name\"));"))
+            db$update(paste0("CREATE TABLE \"", fileNamesTable, "\" (\"name\" VARCHAR(200), \"tags\" VARCHAR(200));"))
+            db$update(paste0("CREATE TABLE \"", tableNamesTable, "\" (\"name\" VARCHAR(200));"))
         },
         
         run = function() {
