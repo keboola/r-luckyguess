@@ -10,7 +10,7 @@
     "scriptParameters": {
       "paramNumber": 42,
       "paramNested": {
-        "columnName": "test-column",
+        "columnName": "Test-column",
         "columnFoo": 4.2,
         "columnBar": "test-string"
       }

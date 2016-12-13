@@ -33,7 +33,7 @@ test_that("column conversions", {
     app$readConfig()
     app$validate()
     app$run()
-    expect_equal('test-column', app$scriptParameters$paramNested$columnName)
+    expect_equal('Test-column', app$scriptParameters$paramNested$columnName)
 })
 
 test_that("column conversions_snowflake", {
@@ -43,7 +43,7 @@ test_that("column conversions_snowflake", {
     app$readConfig()
     app$validate()
     app$run()
-    expect_equal('test-column', app$scriptParameters$paramNested$columnName)
+    expect_equal('Test-column', app$scriptParameters$paramNested$columnName)
 })
 
 
