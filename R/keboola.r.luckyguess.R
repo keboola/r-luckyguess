@@ -169,8 +169,8 @@ LGApplication <- setRefClass(
                                                     typeof(data[[name[1]]]), " expected ", dataType, ", and cannot be converted: ", w$message)
                             })
                         } else if (dataType == "lg_column") {
-                            # 'lg_column' is our own special type used to lowercase a string
-                            data[[name[1]]] <- tolower(data[[name[1]]])
+                            # 'lg_column' **WAS** our own special type used to lowercase a string
+                            # Now we will take no special action for this type
                         } else {
                             checkWarnings <<- paste0("Parameter ", name, " in ", fullName, " has different datatype, got ", 
                                                typeof(data[[name[1]]]), " expected ", dataType, ".")
