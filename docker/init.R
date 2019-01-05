@@ -1,5 +1,6 @@
 # install really required packages
-install.packages(c('git2r', 'jsonlite', 'devtools', 'rJava', 'RJDBC', 'dplyr', 'testthat'), repos = 'http://cran.us.r-project.org', dependencies = c("Depends", "Imports", "LinkingTo"), INSTALL_opts = c("--no-html"), verbose = FALSE, quiet = TRUE)
+install.packages(c('git2r', 'jsonlite', 'devtools', 'testthat'), repos = 'http://cran.us.r-project.org', dependencies = c("Depends", "Imports", "LinkingTo"), INSTALL_opts = c("--no-html"), verbose = FALSE, quiet = TRUE)
+install.packages(c('rJava', 'RJDBC', 'dplyr'), repos = 'http://cran.us.r-project.org', dependencies = c("Depends", "Imports", "LinkingTo"), INSTALL_opts = c("--no-html"), verbose = FALSE, quiet = TRUE)
 
 # install some commonly used packages
 install.packages(c('arules', 'corrgram', 'data.table', 'gbm', 'ggplot2', 'leaps', 'plyr', 'lubridate', 'reshape2', 'rpart', 'rpart.plot'), repos = 'http://cran.us.r-project.org', dependencies = c("Depends", "Imports", "LinkingTo"), INSTALL_opts = c("--no-html"), verbose = FALSE, quiet = TRUE)
